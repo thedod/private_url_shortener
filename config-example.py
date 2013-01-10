@@ -1,6 +1,7 @@
+PORT = 51723
+
 #### Development
 LOG = True
-PORT = 51723
 APP_MOUNTPOINT = 'http://localhost:{0}'.format(PORT)
 SHORTENER_ROOT = '/'
 SHORTENED_ROOT = '/'

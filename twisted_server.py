@@ -2,8 +2,7 @@
 
 import sys
 from twisted.web.server import Site
-from twisted.web.resource import Resource
-from twisted.web.error import NoResource
+from twisted.web.resource import Resource,NoResource
 from twisted.internet import reactor
 from twisted.web.util import redirectTo
 from twisted.python import log
