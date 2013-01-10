@@ -12,14 +12,3 @@ cache_opts = {
 
 cache = CacheManager(**parse_cache_config_options(cache_opts))
 tcache = cache.get_cache("stuff", type='dbm') #, expire=3600)
-
-
-abuse_opts = {
-    'cache.type': 'file',
-    'cache.data_dir': os.path.join(dot,'abuser_data'),
-    'cache.lock_dir': os.path.join(dot,'abuser_lock'),
-}
-
-abuse = CacheManager(**parse_cache_config_options(abuse_opts))
-tabuse = abuse.get_cache("stuff", type='dbm') #, expire=5)
-

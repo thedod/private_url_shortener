@@ -1,4 +1,11 @@
+# Runtime
 *.py[co]
+url_shortener_data
+url_shortener_lock
+
+# Deployment-specific
+config.py
+templates/404.html
 
 # Packages
 *.egg
