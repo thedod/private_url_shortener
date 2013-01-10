@@ -34,7 +34,10 @@ class UrlShortener(Resource):  # Resources are what Site knows how to deal with
     isLeaf = True  # Disable child lookup
 
     def render_GET(self, request):
-        url_id = request.path.lstrip(SHORTENED_ROOT)
+        url_id = request.path
+        for prefix in [SHORTENER_ROOT,SHORTENED_ROOT]:
+            if url_id.startswith(prefix):
+                url_id = url_id.lstrip(prefix)
         if not url_id:
             #return index_template.format(request.args.get('u',[''])[0],short_id(5),`dir(request)`)
             return index_template.format(request.args.get('u',[''])[0],short_id(5),APP_MOUNTPOINT+SHORTENER_ROOT)
