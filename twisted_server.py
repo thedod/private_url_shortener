@@ -54,9 +54,14 @@ class UrlShortener(Resource):  # Resources are what Site knows how to deal with
             # Let's not tell abusers what went wrong :)
             return NoResource(ERROR404).render(request)
         full_url = cgi.escape(request.args["full_url"][0])
+        lc = full_url.lower()
+        for b in BLACKLIST:
+            if lc.find(b)>=0:
+                # OK. I admit I'm too lazy to write error templates :)
+                return NoResource(ERROR404).render(request)
         short_url = cgi.escape(request.args["short_url"][0])
         if cache.tcache.has_key(short_url):
-            # Too lazy, so instead of writing a "shourt-url is taken" template,
+            # Once again, instead of writing a "shourt-url is taken" template,
             # simply redirect to the existing full_url as indication :)
             # admin can hit back button and choose a different short url
             return redirectTo(str(cache.tcache.get_value(short_url)), request)
