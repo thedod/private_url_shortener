@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+from os import urandom
 from twisted.web.server import Site
 from twisted.web.resource import Resource,NoResource
 from twisted.internet import reactor
@@ -15,8 +16,8 @@ import hmac
 
 from config import *
 
-def short_id(num):
-    return "".join(sample(digits + ascii_letters, num))
+def short_id(size):
+    return urandom(size).encode('base64').translate(None,'/+=\n')
 
 with open('templates/index.html') as fh:
     index_template = fh.read()
@@ -40,7 +41,7 @@ class UrlShortener(Resource):  # Resources are what Site knows how to deal with
                 url_id = url_id.lstrip(prefix)
         if not url_id:
             #return index_template.format(request.args.get('u',[''])[0],short_id(5),`dir(request)`)
-            return index_template.format(request.args.get('u',[''])[0],short_id(5),APP_MOUNTPOINT+SHORTENER_ROOT)
+            return index_template.format(request.args.get('u',[''])[0],short_id(RANDOM_BYTES),APP_MOUNTPOINT+SHORTENER_ROOT)
         else:
             if cache.tcache.has_key(url_id):
                 return redirectTo(str(cache.tcache.get_value(url_id)), request)
