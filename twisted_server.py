@@ -16,6 +16,9 @@ import hmac
 
 from config import *
 
+def unescape(s): # a ThereIFixedIt kinda thing :)
+    return s.replace('&amp;','&')
+
 def short_id(size):
     return urandom(size).encode('base64').translate(None,'/+=\n')
 
@@ -40,7 +43,6 @@ class UrlShortener(Resource):  # Resources are what Site knows how to deal with
             if url_id.startswith(prefix):
                 url_id = url_id.lstrip(prefix)
         if not url_id:
-            #return index_template.format(request.args.get('u',[''])[0],short_id(5),`dir(request)`)
             return index_template.format(request.args.get('u',[''])[0],short_id(RANDOM_BYTES),APP_MOUNTPOINT+SHORTENER_ROOT)
         else:
             if cache.tcache.has_key(url_id):
@@ -49,17 +51,17 @@ class UrlShortener(Resource):  # Resources are what Site knows how to deal with
                 return NoResource(ERROR404).render(request)
 
     def render_POST(self, request):  # Define a handler for POST requests
-        password = cgi.escape(request.args["password"][0])
+        password = request.args["password"][0]
         if hmac.new(PASSWORD_SALT.decode('hex'),password).hexdigest()!=PASSWORD_HASH:
             # Let's not tell abusers what went wrong :)
             return NoResource(ERROR404).render(request)
-        full_url = cgi.escape(request.args["full_url"][0])
+        full_url = unescape(request.args["full_url"][0])
         lc = full_url.lower()
         for b in BLACKLIST:
             if lc.find(b)>=0:
                 # OK. I admit I'm too lazy to write error templates :)
                 return NoResource(ERROR404).render(request)
-        short_url = cgi.escape(request.args["short_url"][0])
+        short_url = request.args["short_url"][0]
         if cache.tcache.has_key(short_url):
             # Once again, instead of writing a "shourt-url is taken" template,
             # simply redirect to the existing full_url as indication :)

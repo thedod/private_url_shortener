@@ -11,6 +11,6 @@
       <input onclick="this.select()" type="password" name="password" id="password"><br>
       <input type="submit" name="submit" value="Shorten">
     </form>
-Bookmarklet: <a href="javascript:location.href='{2}?u='+location.href">Shrtn</a>
+Bookmarklet: <a href="javascript:location.href='{2}?u='+encodeURIComponent(location.toString())">Shrtn</a>
   </body>
 </html>
